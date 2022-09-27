@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using EmployeePayroll.Domain.Entities;
 using EmployeePayroll.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -15,49 +16,56 @@ public class GetPayrollReportQuery
         _context = context;
     }
 
-    public async Task<ActionResult<IEnumerable<TimeReportDTO>>> GetQuery()
+    public async Task<PayrollReportDTO> GetQuery()
     {
-        return await _context.TimeReports
-                    .Select(t => ItemToDTO(t))
-                    .ToListAsync();
-    }
+        IEnumerable<TimeReportDTO> timeReports = await new GetTimeReportsQuery(_context).GetQuery();
 
-    public async Task<PayrollReport?> GetQuery(long id)
-    {
-        IEnumerable<TimeReportDTO> timeReports = await _context.TimeReports
-                    .Select(t => ItemToDTO(t))
-                    .ToListAsync();
+        PayrollReportDTO payrollReportDTO = new PayrollReportDTO();
+        EmployeeReport employeeReport = new EmployeeReport();
 
-        PayrollReport payrollReport = new PayrollReport();
-
-        return null;
-    }
-
-
-    private static TimeReport DTOToItem(TimeReport? timeReport, TimeReportDTO timeReportDTO)
-    {
-        if (timeReport == null)
+        foreach (TimeReportDTO time in timeReports)
         {
-            timeReport = new TimeReport();
+            //Define the range of dates
+            DateTime startDate = new DateTime();
+            DateTime endDate = new DateTime();
+            if (time.Date.Day >= 1 && time.Date.Day <= 15)
+            {
+                startDate = new DateTime(time.Date.Year, time.Date.Month, 1);
+                endDate = startDate.AddDays(14);
+            }
+            else if (time.Date.Day >= 16)
+            {
+                startDate = new DateTime(time.Date.Year, time.Date.Month, 1).AddDays(15);
+                endDate = new DateTime(time.Date.Year, time.Date.Month, 1).AddMonths(1).AddSeconds(-1);
+            }
+
+            if (employeeReport.EmployeeId == 0) //if first time running
+            {
+                employeeReport.EmployeeId = time.EmployeeId;
+                employeeReport.PayPeriod.StartDate = startDate;
+            }
+            
+            if ((employeeReport.EmployeeId != time.EmployeeId) || (time.Date.Month != employeeReport.PayPeriod.StartDate.Month) || (startDate != employeeReport.PayPeriod.StartDate))
+            {
+                payrollReportDTO.EmployeeReports.Add(employeeReport);
+
+                employeeReport = new EmployeeReport();
+            }
+
+            if (time.JobGroup.Equals('A'))
+            {
+                employeeReport.AmountPaid += Convert.ToDecimal(time.HoursWorked * TimeReport.PAY_GROUP_A);
+            }
+            else if (time.JobGroup.Equals('B'))
+            {
+                employeeReport.AmountPaid += Convert.ToDecimal(time.HoursWorked * TimeReport.PAY_GROUP_B);
+            }
+
+            employeeReport.EmployeeId = time.EmployeeId;
+            employeeReport.PayPeriod.StartDate = startDate;
+            employeeReport.PayPeriod.EndDate = endDate;
         }
 
-        timeReport.Date = timeReportDTO.Date;
-        timeReport.EmployeeId = timeReportDTO.EmployeeId;
-        timeReport.HoursWorked = timeReportDTO.HoursWorked;
-        timeReport.JobGroup = timeReportDTO.JobGroup;
-        timeReport.ReportId = timeReportDTO.ReportId;
-
-        return timeReport;
+        return payrollReportDTO;
     }
-
-    private static TimeReportDTO ItemToDTO(TimeReport timeReport) =>
-        new TimeReportDTO
-        {
-            Id = timeReport.Id,
-            Date = timeReport.Date,
-            EmployeeId = timeReport.EmployeeId,
-            HoursWorked = timeReport.HoursWorked,
-            JobGroup = timeReport.JobGroup,
-            ReportId = timeReport.ReportId
-        };
 }

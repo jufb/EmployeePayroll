@@ -15,44 +15,34 @@ public class TimeReportController : ControllerBase
     {
         _context = context;
     }
-
+    
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TimeReportDTO>>> GetTimeReport()
+    public async Task<ActionResult<PayrollReportDTO>> GetTimeReport()
     {
         if (_context.TimeReports == null)
         {
             return NotFound();
         }
 
-        return await new GetTimeReportsQuery(_context).GetQuery();
-    }
+        PayrollReportDTO? payrollReportDTO = await new GetPayrollReportQuery(_context).GetQuery();
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<TimeReportDTO>> GetTimeReport(long id)
-    {
-        if (_context.TimeReports == null)
+        if (payrollReportDTO == null)
         {
             return NotFound();
         }
 
-        TimeReportDTO? timeReportDto = await new GetTimeReportsQuery(_context).GetQuery(id);
-
-        if (timeReportDto == null)
-        {
-            return NotFound();
-        }
-
-        return timeReportDto;
+        return payrollReportDTO;
     }
 
     [HttpPost]
-    public async Task<ActionResult<IEnumerable<TimeReportDTO>>> Create(string file)
+    public async Task<ActionResult<PayrollReportDTO>> Create(string file)
     {
         if (_context.TimeReports == null) return Problem("Entity set 'TimeReportContext.TimeReports' is null.");
 
         try
         {
             (bool Exist, long ReportId) result = new GetTimeReportsQuery(_context).ReportIdExists(file);
+
             if (result.Exist)
             {
                 return Problem("Time Report Id already exists. Please try again with a new file.");

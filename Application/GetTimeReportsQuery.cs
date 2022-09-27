@@ -16,30 +16,20 @@ public class GetTimeReportsQuery
         _context = context;
     }
 
-    public async Task<ActionResult<IEnumerable<TimeReportDTO>>> GetQuery()
+    public async Task<IEnumerable<TimeReportDTO>> GetQuery()
     {
         return await _context.TimeReports
+                    .OrderBy(t => t.EmployeeId)
+                    .ThenBy(t => t.Date)
                     .Select(t => ItemToDTO(t))
                     .ToListAsync();
-    }
-
-    public async Task<TimeReportDTO?> GetQuery(long id)
-    {
-        TimeReport? timeReport =  await _context.TimeReports.FindAsync(id);
-
-        if(timeReport is not null)
-        {
-            return ItemToDTO(timeReport);
-        }
-
-        return null;
     }
 
     public (bool,long) ReportIdExists(string file)
     {
         long reportId = GetNumbersFromString(file);
 
-        if (GetTimeReportIdQuery(reportId))
+        if ((_context.TimeReports?.Any(e => e.ReportId == reportId)).GetValueOrDefault())
         {
             return (true,reportId);
         }
@@ -55,33 +45,6 @@ public class GetTimeReportsQuery
             .ToArray();
         
         return long.Parse(String.Join(",", numbers));
-    }
-
-    private bool GetTimeReportQuery(long id)
-    {
-        return (_context.TimeReports?.Any(e => e.Id == id)).GetValueOrDefault();
-    }
-
-    private bool GetTimeReportIdQuery(long id)
-    {
-        return (_context.TimeReports?.Any(e => e.ReportId == id)).GetValueOrDefault();
-    }
-
-
-    private static TimeReport DTOToItem(TimeReport? timeReport, TimeReportDTO timeReportDTO)
-    {
-        if (timeReport == null)
-        {
-            timeReport = new TimeReport();
-        }
-
-        timeReport.Date = timeReportDTO.Date;
-        timeReport.EmployeeId = timeReportDTO.EmployeeId;
-        timeReport.HoursWorked = timeReportDTO.HoursWorked;
-        timeReport.JobGroup = timeReportDTO.JobGroup;
-        timeReport.ReportId = timeReportDTO.ReportId;
-
-        return timeReport;
     }
 
     private static TimeReportDTO ItemToDTO(TimeReport timeReport) =>
