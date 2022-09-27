@@ -25,47 +25,59 @@ public class GetPayrollReportQuery
 
         foreach (TimeReportDTO time in timeReports)
         {
-            //Define the range of dates
-            DateTime startDate = new DateTime();
-            DateTime endDate = new DateTime();
-            if (time.Date.Day >= 1 && time.Date.Day <= 15)
-            {
-                startDate = new DateTime(time.Date.Year, time.Date.Month, 1);
-                endDate = startDate.AddDays(14);
-            }
-            else if (time.Date.Day >= 16)
-            {
-                startDate = new DateTime(time.Date.Year, time.Date.Month, 1).AddDays(15);
-                endDate = new DateTime(time.Date.Year, time.Date.Month, 1).AddMonths(1).AddSeconds(-1);
-            }
+            PayPeriod payPeriod = DefinePayPeriod(time.Date);
 
-            if (employeeReport.EmployeeId == 0) //if first time running
+            if (employeeReport.EmployeeId.Equals(0)) //New employee
             {
                 employeeReport.EmployeeId = time.EmployeeId;
-                employeeReport.PayPeriod.StartDate = startDate;
+                employeeReport.PayPeriod.StartDate = payPeriod.StartDate;
             }
-            
-            if ((employeeReport.EmployeeId != time.EmployeeId) || (time.Date.Month != employeeReport.PayPeriod.StartDate.Month) || (startDate != employeeReport.PayPeriod.StartDate))
+
+            //Add the employeeReport into the list at every different employee or date
+            if ((employeeReport.EmployeeId != time.EmployeeId) || (payPeriod.StartDate != employeeReport.PayPeriod.StartDate))
             {
-                payrollReportDTO.EmployeeReports.Add(employeeReport);
+                payrollReportDTO.PayrollReport.EmployeeReports.Add(employeeReport);
 
                 employeeReport = new EmployeeReport();
             }
 
-            if (time.JobGroup.Equals('A'))
-            {
-                employeeReport.AmountPaid += Convert.ToDecimal(time.HoursWorked * TimeReport.PAY_GROUP_A);
-            }
-            else if (time.JobGroup.Equals('B'))
-            {
-                employeeReport.AmountPaid += Convert.ToDecimal(time.HoursWorked * TimeReport.PAY_GROUP_B);
-            }
+            CalculateAmountPaid(employeeReport, time);
 
             employeeReport.EmployeeId = time.EmployeeId;
-            employeeReport.PayPeriod.StartDate = startDate;
-            employeeReport.PayPeriod.EndDate = endDate;
+            employeeReport.PayPeriod.StartDate = payPeriod.StartDate;
+            employeeReport.PayPeriod.EndDate = payPeriod.EndDate;
         }
 
         return payrollReportDTO;
+    }
+
+    private PayPeriod DefinePayPeriod(DateTime time)
+    {
+        PayPeriod payPeriod = new PayPeriod();
+
+        if (time.Date.Day >= 1 && time.Date.Day <= 15)
+        {
+            payPeriod.StartDate = new DateTime(time.Date.Year, time.Date.Month, 1).Date;
+            payPeriod.EndDate = new DateTime(time.Date.Year, time.Date.Month, 1).AddDays(14).Date;
+        }
+        else if (time.Date.Day >= 16)
+        {
+            payPeriod.StartDate = new DateTime(time.Date.Year, time.Date.Month, 1).AddDays(15).Date;
+            payPeriod.EndDate = new DateTime(time.Date.Year, time.Date.Month, 1).AddMonths(1).AddSeconds(-1).Date;
+        }
+
+        return payPeriod;
+    }
+
+    private static void CalculateAmountPaid(EmployeeReport employeeReport, TimeReportDTO time)
+    {
+        if (time.JobGroup.Equals('A'))
+        {
+            employeeReport.AmountPaid += Convert.ToDecimal(time.HoursWorked * TimeReport.PAY_GROUP_A);
+        }
+        else if (time.JobGroup.Equals('B'))
+        {
+            employeeReport.AmountPaid += Convert.ToDecimal(time.HoursWorked * TimeReport.PAY_GROUP_B);
+        }
     }
 }

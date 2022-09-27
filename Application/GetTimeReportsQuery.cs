@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using EmployeePayroll.Domain.Entities;
 using EmployeePayroll.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,7 @@ public class GetTimeReportsQuery
         return await _context.TimeReports
                     .OrderBy(t => t.EmployeeId)
                     .ThenBy(t => t.Date)
-                    .Select(t => ItemToDTO(t))
+                    .Select(t => new TimeReportDTO(t))
                     .ToListAsync();
     }
 
@@ -46,15 +45,4 @@ public class GetTimeReportsQuery
         
         return long.Parse(String.Join(",", numbers));
     }
-
-    private static TimeReportDTO ItemToDTO(TimeReport timeReport) =>
-        new TimeReportDTO
-        {
-            Id = timeReport.Id,
-            Date = timeReport.Date,
-            EmployeeId = timeReport.EmployeeId,
-            HoursWorked = timeReport.HoursWorked,
-            JobGroup = timeReport.JobGroup,
-            ReportId = timeReport.ReportId
-        };
 }

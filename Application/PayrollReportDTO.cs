@@ -5,6 +5,6 @@ namespace EmployeePayroll.Application
 {
     public class PayrollReportDTO
     {
-        public List<EmployeeReport> EmployeeReports { get; set; } = new List<EmployeeReport>();
+        public PayrollReport PayrollReport { get; set; } = new PayrollReport();
     }
 }
