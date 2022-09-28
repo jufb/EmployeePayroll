@@ -16,6 +16,8 @@ public class CreateTimeReportCommand
 
     public async Task<int> CreateTimeReport(string file, long reportId)
     {
+        (bool Exist, long ReportId) result = new GetTimeReportsQuery(_context).ReportIdExists(file);
+
         try
         {
             foreach (var timeReport in CsvFileReader.LoadCsv(file))

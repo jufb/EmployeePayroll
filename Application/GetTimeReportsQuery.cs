@@ -38,11 +38,18 @@ public class GetTimeReportsQuery
 
     private static long GetNumbersFromString(string file)
     {
-        string[] numbers = Regex.Matches(file, @"(?<=-)\d+?(?=.csv)")
-            .Cast<Match>()
-            .Select(n => n.Value)
-            .ToArray();
-        
-        return long.Parse(String.Join(",", numbers));
+        try
+        {
+            string[] numbers = Regex.Matches(file, @"(?<=-)\d+?(?=.csv)")
+                .Cast<Match>()
+                .Select(n => n.Value)
+                .ToArray();
+
+            return long.Parse(String.Join(",", numbers));
+        }
+        catch
+        {
+            return 0;
+        }
     }
 }

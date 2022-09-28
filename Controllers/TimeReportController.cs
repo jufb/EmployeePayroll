@@ -19,29 +19,36 @@ public class TimeReportController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PayrollReportDTO>> GetPayrollReport()
     {
-        if (_context.TimeReports == null) return Problem("Error: Entity set 'TimeReportContext.TimeReports' is null.");
+        if (_context.TimeReports == null)
+            return Problem("Error: Entity set 'TimeReportContext.TimeReports' is null.");
 
         return await new GetPayrollReportQuery(_context).GetQuery();
     }
 
     [HttpPost]
-    public async Task<ActionResult<PayrollReportDTO>> Create(string file)
+    public async Task<ActionResult<PayrollReportDTO>> CreateFile(string file)
     {
-        if (_context.TimeReports == null) return Problem("Error: Entity set 'TimeReportContext.TimeReports' is null.");
+        if (_context.TimeReports == null)
+            return Problem("Error: Entity set 'TimeReportContext.TimeReports' is null.");
+
+        (bool Exist, long ReportId) result = new GetTimeReportsQuery(_context).ReportIdExists(file);
+
+        if (result.ReportId.Equals(0))
+            return BadRequest("Bad Request: File format is not accepted.");
+
+        if (result.Exist)
+            return BadRequest("Bad Request: Time Report Id already exists. Please try again with a new file.");
 
         try
         {
-            (bool Exist, long ReportId) result = new GetTimeReportsQuery(_context).ReportIdExists(file);
-
-            if (result.Exist) return Problem("Error: Time Report Id already exists. Please try again with a new file.");
-            
-            await new CreateTimeReportCommand(_context).CreateTimeReport(file, result.ReportId);
+            if (new CreateTimeReportCommand(_context).CreateTimeReport(file, result.ReportId).Result.Equals(0))
+                return NoContent();
 
             return await GetPayrollReport();
         }
-        catch
+        catch (Exception e)
         {
-            return Problem("Error: Could not include the file.");
+            return Problem("Error: Could not include the file. Exception description: " + e.ToString());
         }
     }
 }

@@ -5,28 +5,20 @@ namespace EmployeePayroll.Application;
 
 public class TimeReportDTO
 {
-    public long Id { get; set; }
-    public long ReportId { get; set; }
-    public DateTime Date { get; set; }
-    public float HoursWorked { get; set; }
-    public long EmployeeId { get; set; }
-    public char? JobGroup { get; set; }
+    public long Id { get; }
+    public long ReportId { get; }
+    public DateTime Date { get; }
+    public float HoursWorked { get; }
+    public long EmployeeId { get; }
+    public char? JobGroup { get; }
 
-    public TimeReportDTO() { }
-    public TimeReportDTO(TimeReport timeReport) =>
-    (
-        Id,
-        Date,
-        HoursWorked,
-        EmployeeId,
-        JobGroup,
-        ReportId
-    ) = (
-        timeReport.Id,
-        timeReport.Date,
-        timeReport.HoursWorked,
-        timeReport.EmployeeId,
-        timeReport.JobGroup,
-        timeReport.ReportId
-    );
+    public TimeReportDTO(TimeReport timeReport)
+    {
+        Id = timeReport.Id;
+        Date = timeReport.Date;
+        HoursWorked = timeReport.HoursWorked;
+        EmployeeId = timeReport.EmployeeId;
+        JobGroup = timeReport.JobGroup;
+        ReportId = timeReport.ReportId;
+    }
 }
