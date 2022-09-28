@@ -8,10 +8,12 @@ An API made in C# that posts csv format file and returns a payroll report of emp
 ## Instructions
 
 1. Install the latest [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
-2. Extract the file `employeepayroll.bundle`
-3. Using terminal, navigate to `EmployeePayroll` and launch the project using `dotnet run`
-4. Open Postman and make a `POST` request using the url `https://localhost:7150/api/timereport`
-5. Add Parameter key `file` and Value as the url of the file time-report-x.csv where `x` is the reportId.
+2. Download the file `jufb-challenge-payroll.bundle`
+3. On Terminal, clone the file using `git clone jufb-challenge-payroll.bundle`
+4. Navigate to `jufb-challenge-payroll` and launch the project using `dotnet run`
+5. Open Postman and make a `POST` request using the url `https://localhost:7150/api/timereport`
+6. Add Parameter key `file` and Value as the url of the file time-report-x.csv where `x` is the reportId
+7. The application also allows `GET` requests using the same url.
 
 ## How did you test that your implementation was correct?
   1. Implemented a test case.
