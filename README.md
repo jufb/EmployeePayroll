@@ -15,7 +15,7 @@ An API made in C# that posts csv format file and returns a payroll report of emp
 
 ## How did you test that your implementation was correct?
   1. Implemented a test case.
-  2. Used Postman and created test scenarios of requests using the data to understand the process and how would I implement it.
+  2. Used Postman and created test scenarios of requests using the data to understand the process and how I would implement it.
   3. Tested alternative cases using different data types and volumes.
   4. Implemented the presented solution following the requirements.
   5. Structured the code following some clean architecture principles.
@@ -24,7 +24,10 @@ An API made in C# that posts csv format file and returns a payroll report of emp
 ## If this application was destined for a production environment, what would you add or change?
   1. I would change the in-memory database to a real database.
   2. I would choose Postgres database due to the potential large data volume and to handle better performance.
-  3. I would add more options to increase the performance and improve user experience such as:
+  3. I would implement limitation of requests per minute per user.
+  4. I would include logging for monitoring purposes such as log4net. Logging would be used for understanding the app usage levels, if the server needs to be scalled or the database is inappropriate.
+  5. I would add versioning validation for users using different versions of apps that consume this api. For instance, if the request version differs, the HTTP response would be 406 Not Acceptable, requiring the user to install an updated app version.
+  6. I would add more options to increase the performance and improve user experience:
       1. Pagination.
       2. Limit data per page.
       3. Filters to search employees in determined Date range and/or Amount Paid range.
@@ -33,5 +36,5 @@ An API made in C# that posts csv format file and returns a payroll report of emp
 
 ## What compromises did you have to make as a result of the time constraints of this challenge?
   * Used an in-memory database sacrificing performance and data permanence.
-  * Not implemented authorization token.
-  * Not implemented limitation of requests.
+  * Did not implement authorization token of user to limit the number of requests per minute.
+  * Did not use a Swagger page for documentation purposes.
