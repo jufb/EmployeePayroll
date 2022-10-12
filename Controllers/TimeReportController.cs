@@ -1,4 +1,3 @@
-using System;
 using EmployeePayroll.Application;
 using EmployeePayroll.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +25,19 @@ public class TimeReportController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<PayrollReportDTO>> CreateFile(string file)
+    public async Task<ActionResult<PayrollReportDTO>> CreateFile()
     {
         if (_context.TimeReports == null)
             return Problem("Error: Entity set 'TimeReportContext.TimeReports' is null.");
 
-        (bool Exist, long ReportId) result = new GetTimeReportsQuery(_context).ReportIdExists(file);
+        if (HttpContext.Request.ContentLength == 0)
+        {
+            return BadRequest("Bad Request: File was not included.");
+        }
+
+        var formFile = HttpContext.Request.Form.Files[0];
+
+        (bool Exist, long ReportId) result = new GetTimeReportsQuery(_context).ReportIdExists(formFile.FileName);
 
         if (result.ReportId.Equals(0))
             return BadRequest("Bad Request: File format is not accepted.");
@@ -41,7 +47,7 @@ public class TimeReportController : ControllerBase
 
         try
         {
-            if (new CreateTimeReportCommand(_context).CreateTimeReport(file, result.ReportId).Result.Equals(0))
+            if (new CreateTimeReportCommand(_context).CreateTimeReport(formFile.OpenReadStream(), result.ReportId).Result.Equals(0))
                 return NoContent();
 
             return await GetPayrollReport();

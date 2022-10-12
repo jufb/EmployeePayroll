@@ -9,7 +9,7 @@ namespace EmployeePayroll.Infrastructure;
 
 public class CsvFileReader
 {
-    public static IEnumerable<TimeReport> LoadCsv(string path)
+    public static IEnumerable<TimeReport> LoadCsv(Stream file)
     {
         try
         {
@@ -19,7 +19,7 @@ public class CsvFileReader
                 MissingFieldFound = null,
             };
 
-            using (var reader = new StreamReader(path))
+            using (var reader = new StreamReader(file))
             using (var csv = new CsvReader(reader, config))
             {
                 csv.Context.RegisterClassMap<TimeReportMap>();

@@ -4,14 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new DateConverter());
-        options.JsonSerializerOptions.Converters.Add(new CurrencyConverter());
-    });
-
-builder.Services.AddDbContext<TimeReportContext>(option => option.UseInMemoryDatabase("EmployeePayroll"));
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
@@ -22,6 +15,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("_developmentSpecificOrigins");
 
 app.UseAuthorization();
 

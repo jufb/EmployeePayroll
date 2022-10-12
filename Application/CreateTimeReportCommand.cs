@@ -14,10 +14,8 @@ public class CreateTimeReportCommand
         _context = context;
     }
 
-    public async Task<int> CreateTimeReport(string file, long reportId)
+    public async Task<int> CreateTimeReport(Stream file, long reportId)
     {
-        (bool Exist, long ReportId) result = new GetTimeReportsQuery(_context).ReportIdExists(file);
-
         try
         {
             foreach (var timeReport in CsvFileReader.LoadCsv(file))
