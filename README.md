@@ -1,5 +1,5 @@
 # Employee Payroll
-An API made in React and C# that posts csv format file and returns a payroll report of employees.
+An application made in React and C# with an API that posts csv format file and returns a payroll report of employees.
 
 ## Technologies used
 * [React Bootstrap](https://react-bootstrap.github.io)
