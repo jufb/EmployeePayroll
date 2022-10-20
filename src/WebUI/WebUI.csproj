@@ -1,0 +1,95 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>EmployeePayroll</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'EmployeePayroll' " />
+  <ItemGroup>
+    <None Remove="Microsoft.EntityFrameworkCore.InMemory" />
+    <None Remove="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
+    <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
+    <None Remove="Microsoft.EntityFrameworkCore.Tools" />
+    <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
+    <None Remove="CsvFileReader" />
+    <None Remove="CsvHelper" />
+    <None Remove="Microsoft.AspNet.WebApi.Cors" />
+    <None Remove="src\Application\obj\Application.csproj.nuget.g.targets" />
+    <None Remove="src\Application\obj\Application.csproj.nuget.g.props" />
+    <None Remove="src\Application\obj\project.nuget.cache" />
+    <None Remove="src\Application\obj\Debug\net6.0\Application.csproj.FileListAbsolute.txt" />
+    <None Remove="src\Application\obj\Debug\net6.0\Application.AssemblyInfoInputs.cache" />
+    <None Remove="src\Application\obj\Debug\net6.0\Application.csproj.AssemblyReference.cache" />
+    <None Remove="src\Application\obj\Debug\net6.0\Application.assets.cache" />
+    <None Remove="src\Application\obj\Debug\net6.0\Application.GeneratedMSBuildEditorConfig.editorconfig" />
+    <None Remove="ClientApp\" />
+    <None Remove="Controllers\" />
+    <None Remove="src\.DS_Store" />
+    <None Remove="src\Infrastructure\.DS_Store" />
+    <None Remove="src\Infrastructure\obj\Infrastructure.csproj.nuget.g.targets" />
+    <None Remove="src\Infrastructure\obj\project.nuget.cache" />
+    <None Remove="src\Infrastructure\obj\Infrastructure.csproj.nuget.g.props" />
+    <None Remove="src\Infrastructure\obj\Debug\net6.0\Infrastructure.csproj.AssemblyReference.cache" />
+    <None Remove="src\Infrastructure\obj\Debug\net6.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig" />
+    <None Remove="src\Infrastructure\obj\Debug\net6.0\Infrastructure.assets.cache" />
+    <None Remove="src\Infrastructure\obj\Debug\net6.0\Infrastructure.csproj.FileListAbsolute.txt" />
+    <None Remove="src\Infrastructure\obj\Debug\net6.0\Infrastructure.AssemblyInfoInputs.cache" />
+    <None Remove="src\Domain\obj\Domain.csproj.nuget.g.props" />
+    <None Remove="src\Domain\obj\Domain.csproj.nuget.g.targets" />
+    <None Remove="src\Domain\obj\project.nuget.cache" />
+    <None Remove="src\Domain\obj\Debug\net6.0\Domain.csproj.FileListAbsolute.txt" />
+    <None Remove="src\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache" />
+    <None Remove="src\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache" />
+    <None Remove="src\Domain\obj\Debug\net6.0\Domain.assets.cache" />
+    <None Remove="src\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="src\Application\PayrollReportDTO.cs" />
+    <Compile Remove="src\Application\GetPayrollReportQuery.cs" />
+    <Compile Remove="src\Application\GetTimeReportsQuery.cs" />
+    <Compile Remove="src\Application\CreateTimeReportCommand.cs" />
+    <Compile Remove="src\Application\TimeReportDTO.cs" />
+    <Compile Remove="src\Application\obj\Debug\net6.0\Application.GlobalUsings.g.cs" />
+    <Compile Remove="src\Application\obj\Debug\net6.0\.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" />
+    <Compile Remove="src\Application\obj\Debug\net6.0\Application.AssemblyInfo.cs" />
+    <Compile Remove="src\Domain\Entities\PayrollReport.cs" />
+    <Compile Remove="src\Domain\Entities\PayPeriod.cs" />
+    <Compile Remove="src\Domain\Entities\EmployeeReport.cs" />
+    <Compile Remove="src\Infrastructure\ApplicationDbContext.cs" />
+    <Compile Remove="src\Infrastructure\DateConverter.cs" />
+    <Compile Remove="src\Infrastructure\CurrencyConverter.cs" />
+    <Compile Remove="src\Infrastructure\CsvFileReader.cs" />
+    <Compile Remove="src\Infrastructure\TimeReportMap.cs" />
+    <Compile Remove="src\Infrastructure\ConfigureServices.cs" />
+    <Compile Remove="src\Infrastructure\obj\Debug\net6.0\Infrastructure.GlobalUsings.g.cs" />
+    <Compile Remove="src\Infrastructure\obj\Debug\net6.0\.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" />
+    <Compile Remove="src\Infrastructure\obj\Debug\net6.0\Infrastructure.AssemblyInfo.cs" />
+    <Compile Remove="src\Domain\obj\Debug\net6.0\Domain.GlobalUsings.g.cs" />
+    <Compile Remove="src\Domain\obj\Debug\net6.0\.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" />
+    <Compile Remove="src\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs" />
+    <Compile Remove="src\Domain\Entities\TimeReport.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="src\Application\obj\Application.csproj.nuget.dgspec.json" />
+    <Content Remove="src\Application\obj\project.assets.json" />
+    <Content Remove="src\Infrastructure\obj\Infrastructure.csproj.nuget.dgspec.json" />
+    <Content Remove="src\Infrastructure\obj\project.assets.json" />
+    <Content Remove="src\Domain\obj\Domain.csproj.nuget.dgspec.json" />
+    <Content Remove="src\Domain\obj\project.assets.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ClientApp\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Application\Application.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
